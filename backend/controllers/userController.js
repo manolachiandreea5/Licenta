@@ -6,6 +6,15 @@ const createUser = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
 
+    // Verifică dacă toate câmpurile sunt completate
+    if (!name || !username || !email || !password) {
+      return res.status(400).json({ message: 'Toate câmpurile sunt obligatorii!' });
+    }
+
+  //   if (password.length < 5) {
+  //     return res.status(400).json({ message: 'Parola trebuie să aibă cel puțin 5 caractere!' });
+  //  }
+
     // Verifică dacă email-ul sau username-ul există deja
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
@@ -16,13 +25,29 @@ const createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Crearea utilizatorului
-    const newUser = new User({ name, username, email, password: hashedPassword });
+    const newUser = new User({ 
+      name, 
+      username, 
+      email, 
+      password: hashedPassword 
+    });
+
+    // Salvează utilizatorul și declanșează validarea
+    await newUser.validate();
     await newUser.save();
 
     res.status(201).json({ message: 'Cont creat cu succes!' });
   } catch (error) {
+    // Gestionare erori de validare sau server
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map((err) => err.message);
+      return res.status(400).json({ message: 'Validare eșuată', errors });
+    }
+
+    // Eroare generală
     res.status(500).json({ message: 'Eroare la crearea contului', error });
   }
+  
 };
 
 module.exports = { createUser };
