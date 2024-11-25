@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken'); // Pentru generarea de token-uri
 // Funcția de creare cont
 const createUser = async (req, res) => {
   try {
-    const { nume, username, email, password } = req.body;
+    const { name, username, email, password } = req.body;
 
     // Verifică dacă email-ul sau username-ul există deja
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
@@ -16,7 +16,7 @@ const createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Crearea utilizatorului
-    const newUser = new User({ nume, username, email, password: hashedPassword });
+    const newUser = new User({ name, username, email, password: hashedPassword });
     await newUser.save();
 
     res.status(201).json({ message: 'Cont creat cu succes!' });
