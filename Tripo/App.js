@@ -20,6 +20,7 @@ import Startapp from './screens/Startapp';
 import FirstPage from './screens/FirstPage';
 import Login from './screens/Login';
 import Singup from './screens/Singup';
+import Home from "./screens/Home";
 
 const Stack = createStackNavigator();
 
@@ -46,6 +47,11 @@ const App = () => {
           name="Singup"
           component={Singup}
           options={{ headerShown: false,  animation: 'none' }}
+        />
+        <Stack.Screen 
+          name="Home" 
+          component={Home} 
+          options={{ headerShown: false }} 
         />
       </Stack.Navigator>
     </NavigationContainer>
