@@ -80,7 +80,7 @@ const LogIn = ({ navigation }) => {
       }
   
       Alert.alert('Succes', `Autentificare reușită!`);
-      //navigation.replace('Home'); // Navighează la pagina "Home"
+      navigation.replace('Home'); // Navighează la pagina "Home"
     } catch (error) {
       console.error('Eroare:', error); // Loghează eroarea completă în consolă
       Alert.alert('Eroare', error.message || 'Eroare necunoscută.');

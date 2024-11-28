@@ -19,5 +19,8 @@
     "mongoos": "^0.0.1-security",
     "mongoose": "^8.8.2",
     "mysql2": "^3.11.4"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-private-methods": "^7.25.9"
   }
 }
