@@ -7,18 +7,21 @@ const authenticate = require('./middleware/authMiddleware');
 const app = express();
 //const PORT = process.env.PORT || 5000;
 const HOST = '127.0.0.1';
+// Middleware
+app.use(express.json());
 
+const cors = require('cors');
+app.use(cors());
+
+// Rute
+app.use('/api/users', userRoutes);
 
 // Conexiune la MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log('Database connected successfully'))
   .catch((err) => console.log('Database connection error:', err));
-// Middleware
-app.use(express.json());
 
-// Rute
-app.use('/api/users', userRoutes);
 
 // Pornire server
 const PORT = process.env.PORT || 5000;

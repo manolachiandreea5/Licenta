@@ -56,6 +56,8 @@ module.exports = { createUser };
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('Email primit:', email);
+    console.log('Password primit:', password);
 
     // Verificăm dacă utilizatorul există
     const user = await User.findOne({ email });
