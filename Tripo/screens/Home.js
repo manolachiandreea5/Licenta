@@ -2,8 +2,9 @@ import React from 'react';
 import { View, FlatList, Text, TouchableOpacity  } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; 
 import { Container, Title, SearchInput, SectionTitle, AddButton, styles } from '../components/homeStyles'; // Importă stilurile
+import BottomNavMenu from './BottomNavMenu';
 
-const Home = () => {
+const Home = ({navigation }) => {
   const trips = {
     future: [
       { id: 1, city: 'Turin', dates: '15-19 September', color: '#FFD7D7' },
@@ -57,7 +58,7 @@ const Home = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           paddingHorizontal: 8,
-          marginVertical: 10,
+          marginVertical: 8,
         }}
       >
         <View>
@@ -84,10 +85,12 @@ const Home = () => {
         keyExtractor={(item) => item.id.toString()}
         horizontal={false}
         numColumns={2}
+        contentContainerStyle={{ marginBottom: 100 }}
       />
       <AddButton>
         <Icon name="add" size={25} color="black" />
       </AddButton>
+      <BottomNavMenu navigation={navigation} />
     </Container>
   );
 };
