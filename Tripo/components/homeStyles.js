@@ -34,13 +34,15 @@ export const SearchInput = styled.TextInput`
 export const SectionTitle = styled.Text`
   font-size: 18px;
   font-weight: bold;
-  margin-vertical: 8px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding-horizontal: 8px;
 `;
 
 export const AddButton = styled.TouchableOpacity`
   background-color: #8572FF;
   position: absolute;
-  bottom: 20px;
+  bottom: 80px;
   right: 20px;
   width: 50px;
   height: 50px;
@@ -88,3 +90,23 @@ export const styles = StyleSheet.create({
     color: '#666',
   },
 });
+
+export const BottomNavContainer = styled.View`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: white;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-top-width: 1px;
+  border-top-color: #ddd;
+  z-index: 10;
+`;
+
+export const NavItem = styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+`;
