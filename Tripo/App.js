@@ -9,9 +9,6 @@
 // export default function App() {
 //   return <SignUp />;
 // }
-import { API_URL } from '@env';
-
-console.log('API URL:', API_URL);
 
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
