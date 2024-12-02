@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
 import { View, FlatList, Text, TouchableOpacity, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import CreateNewTripPopup from '../components/CreateNewTripPopup';
 import { Container, Title, SearchInput, SectionTitle, AddButton, PopupButton, PopupOption, styles } from '../components/homeStyles';
 import BottomNavMenu from './BottomNavMenu';
 
 const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [isOptionPopupVisible, setOptionPopupVisible] = useState(false);
+  const [isCreateTripPopupVisible, setCreateTripPopupVisible] = useState(false);
+
+  const handleOptionSelect = (option) => {
+    if (option === 'Create new trip') {
+      setOptionPopupVisible(false);
+      setCreateTripPopupVisible(true);
+    }
+  };
 
   const trips = {
     future: [
@@ -76,59 +86,41 @@ const Home = ({ navigation }) => {
         <Icon name="add" size={25} color="black" />
       </AddButton>
       <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
-      >
+  visible={modalVisible}
+  transparent={true}
+  animationType="fade"
+  onRequestClose={() => setModalVisible(false)}
+>
+  <TouchableOpacity
+    style={styles.modalOverlay}
+    activeOpacity={1}
+    onPress={() => setModalVisible(false)}
+  >
+    <View style={styles.modalContainer}>
+      {[
+        { icon: 'school-outline', label: 'Add activity' },
+        { icon: 'calendar-outline', label: 'Quick plan' },
+        { icon: 'cash-outline', label: 'Add cost' },
+        { icon: 'briefcase-outline', label: 'Create new trip' },
+      ].map((option, index) => (
         <TouchableOpacity
-          style={styles.modalOverlay} // Aceasta va ocupa tot ecranul
-          activeOpacity={1} // Evită efectul de opacitate
-          onPress={() => setModalVisible(false)} // Închide modalul când se apasă în afară
+          key={index}
+          style={styles.popupButton}
+          onPress={() => handleOptionSelect(option.label)}
         >
-          <View style={styles.modalContainer}>
-            <TouchableOpacity
-              style={styles.popupButton}
-              onPress={() => console.log('Add activity')}
-            >
-              <View style={styles.circle}>
-                <Icon name="school-outline" size={20} color="#fff" />
-              </View>
-              <Text style={styles.popupText}>Add activity</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.popupButton}
-              onPress={() => console.log('Quick plan')}
-            >
-              <View style={[styles.circle]}>
-                <Icon name="calendar-outline" size={20} color="#fff" />
-              </View>
-              <Text style={styles.popupText}>Quick plan</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.popupButton}
-              onPress={() => console.log('Add cost')}
-            >
-              <View style={[styles.circle]}>
-                <Icon name="cash-outline" size={20} color="#fff" />
-              </View>
-              <Text style={styles.popupText}>Add cost</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.popupButton}
-              onPress={() => console.log('Create new trip')}
-            >
-              <View style={[styles.circle]}>
-                <Icon name="briefcase-outline" size={20} color="#fff" />
-              </View>
-              <Text style={styles.popupText}>Create new trip</Text>
-            </TouchableOpacity>
+          <View style={styles.circle}>
+            <Icon name={option.icon} size={20} color="#fff" />
           </View>
+          <Text style={styles.popupText}>{option.label}</Text>
         </TouchableOpacity>
-      </Modal>
+      ))}
+    </View>
+  </TouchableOpacity>
+</Modal>
+      <CreateNewTripPopup
+        visible={isCreateTripPopupVisible}
+        onClose={() => setCreateTripPopupVisible(false)}
+      />
       <BottomNavMenu navigation={navigation} />
     </Container>
   );
