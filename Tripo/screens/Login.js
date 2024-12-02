@@ -52,7 +52,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { styles } from '../components/styles';
-import { loginUser } from '../apiService';
 
 const LogIn = ({ navigation }) => {
   const [email, setEmail] = useState('');

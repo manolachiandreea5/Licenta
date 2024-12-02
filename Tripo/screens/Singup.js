@@ -55,7 +55,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { styles } from '../components/styles'; // Stilurile trebuie să fie deja definite
-import { registerUser } from '../apiService';
 
 const SignUp = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -68,6 +67,11 @@ const SignUp = ({ navigation }) => {
   const handleInputChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
   };
+  
+  const registerUser = async (userData) => {
+    const response = await axios.post(`${BASE_URL}/api/users/register`, userData);
+    return response.data;
+};
 
   const handleRegister = async () => {
     try {
