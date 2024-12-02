@@ -56,6 +56,21 @@ export const AddButton = styled.TouchableOpacity`
   shadow-offset: 0px 2px;
 `;
 
+
+export const PopupButton = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  background-color: #8572FF;
+  padding: 12px;
+  margin: 8px;
+  border-radius: 8px;
+`;
+
+export const PopupOption = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
 // Additional styles for FlatList items and cards
 export const styles = StyleSheet.create({
   card: {
@@ -88,6 +103,40 @@ export const styles = StyleSheet.create({
   cardDates: {
     fontSize: 14,
     color: '#666',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: '80%',
+    alignItems: 'flex-start',
+    paddingVertical: 16,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+  },
+  popupButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  
+  circle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#8572FF', // Culoarea fundalului pentru cerc
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+    marginLeft:16,
+  },
+  
+  popupText: {
+    fontSize: 16,
+    color: '#000', // Culoarea textului
   },
 });
 
