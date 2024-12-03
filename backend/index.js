@@ -1,20 +1,18 @@
-require('dotenv').config();
 const mongoose = require('mongoose');
 const express = require('express');
-const userRoutes = require('./routes/userRoutes');
-const authenticate = require('./middleware/authMiddleware');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
-//const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
+
+const userRoutes = require('./routes/userRoutes');
+const transportRoutes = require('./routes/transportRoutes');
+const goalsRoutes = require('./routes/goalsRoutes');
+const authenticate = require('./middleware/authMiddleware');
+const tripRoutes = require('./routes/tripRoutes');
+
 const HOST = '127.0.0.1';
-// Middleware
-app.use(express.json());
-
-const cors = require('cors');
-app.use(cors());
-
-// Rute
-app.use('/api/users', userRoutes);
 
 // Conexiune la MongoDB
 mongoose
@@ -22,11 +20,24 @@ mongoose
   .then(() => console.log('Database connected successfully'))
   .catch((err) => console.log('Database connection error:', err));
 
+// Middleware
+app.use(express.json());
+
+// Rute
+app.use('/api', userRoutes);
+app.use('/api', transportRoutes); 
+app.use('/api', goalsRoutes); 
+app.use('/api', tripRoutes);
+
 
 // Pornire server
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on http://127.0.0.1:${PORT}`));
 
 app.get('/api/protected', authenticate, (req, res) => {
   res.json({ message: `Bine ai venit, utilizator ${req.user.email}!` });
 });
+
+
+const cors = require('cors');
+app.use(cors());
+
