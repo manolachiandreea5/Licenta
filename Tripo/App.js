@@ -18,11 +18,14 @@ import FirstPage from './screens/FirstPage';
 import Login from './screens/Login';
 import Singup from './screens/Singup';
 import Home from "./screens/Home";
+import { AuthProvider } from './context/AuthContext'; // Importă contextul
+
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
+    <AuthProvider>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Startapp">
         <Stack.Screen
@@ -52,6 +55,7 @@ const App = () => {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </AuthProvider>
   );
 };
 
