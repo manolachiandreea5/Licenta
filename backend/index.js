@@ -24,7 +24,7 @@ mongoose
 app.use(express.json());
 
 // Rute
-app.use('/api', userRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api', transportRoutes); 
 app.use('/api', goalsRoutes); 
 app.use('/api', tripRoutes);

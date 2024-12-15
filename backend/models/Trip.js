@@ -30,6 +30,11 @@ const tripSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Cost' 
 }],
+  user: { // Referință către utilizatorul care a creat trip-ul
+  type: mongoose.Schema.Types.ObjectId,
+  ref: 'User', 
+  required: true,
+},
 });
 
 module.exports = mongoose.model('Trip', tripSchema);
