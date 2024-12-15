@@ -5,6 +5,9 @@ const Goal = require('../models/Goals');
 const Transport = require('../models/Transport');
 const Activity = require('../models/Activity');
 const Cost = require('../models/Cost');
+const mongoose = require('mongoose');
+const authenticate = require('../middleware/authMiddleware'); // Importează middleware-ul
+
 
 // tripGoals: [
 //     {
@@ -14,9 +17,9 @@ const Cost = require('../models/Cost');
 //   ],
 
 // GET all trips
-router.get('/trips', async (req, res) => {
+router.get('/trips', authenticate, async (req, res) => {
     try {
-      const trips = await Trip.find()
+      const trips = await Trip.find({ user: req.user.id })
         .populate('transport')
         .populate('tripGoals')
         .populate('activities')
@@ -30,7 +33,7 @@ router.get('/trips', async (req, res) => {
   
 
 // POST create a new trip
-router.post('/trips', async (req, res) => {
+router.post('/trips',authenticate, async (req, res) => {
     try {
       const { name, startDate, endDate, transport, tripGoals, activities, costs } = req.body;
   
@@ -46,6 +49,7 @@ router.post('/trips', async (req, res) => {
         tripGoals,
         activities,
         costs,
+        user: req.user.id, 
       });
   
       const savedTrip = await newTrip.save();
@@ -58,13 +62,13 @@ router.post('/trips', async (req, res) => {
   
 
 // DELETE a trip by ID
-router.delete('/trips/:id', async (req, res) => {
+router.delete('/trips/:id', authenticate,async (req, res) => {
     try {
       if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(400).json({ message: 'Invalid trip ID' });
       }
   
-      const deletedTrip = await Trip.findByIdAndDelete(req.params.id);
+      const deletedTrip = await Trip.findOneAndDelete({ _id: req.params.id, user: req.user.id });
       if (!deletedTrip) {
         return res.status(404).json({ message: 'Trip not found' });
       }
