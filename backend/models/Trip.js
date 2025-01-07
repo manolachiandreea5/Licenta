@@ -35,6 +35,10 @@ const tripSchema = new mongoose.Schema({
   ref: 'User', 
   required: true,
 },
+  friends: [{ // Listă de prieteni adăugați la trip
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 });
 
 module.exports = mongoose.model('Trip', tripSchema);

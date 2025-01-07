@@ -111,15 +111,23 @@ const LogIn = ({ navigation }) => {
         body: JSON.stringify({ email, password }),
       });
   
+      
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+          const errorText = await response.text();
+          console.error('Răspuns server non-JSON:', errorText);
+          throw new Error('Serverul a returnat un răspuns invalid.');
+      }
+      
       const data = await response.json();
-  
       if (!response.ok) {
         throw new Error(data.message || 'Eroare la autentificare.');
       }
   
       if (data.token) {
         setToken(data.token); // Salvează token-ul în context
-        console.log('Token primit:', data.token);
+        //console.log('Token primit:', data.token);
         Alert.alert('Succes', `Autentificare reușită!`);
         navigation.replace('Home'); // Navighează la pagina "Home"
       } else {

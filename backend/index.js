@@ -11,8 +11,9 @@ const transportRoutes = require('./routes/transportRoutes');
 const goalsRoutes = require('./routes/goalsRoutes');
 const authenticate = require('./middleware/authMiddleware');
 const tripRoutes = require('./routes/tripRoutes');
+const costRoutes = require('./routes/costRoutes');
 
-const HOST = '127.0.0.1';
+const HOST = '172.20.10.6';
 
 // Conexiune la MongoDB
 mongoose
@@ -28,6 +29,7 @@ app.use('/api/users', userRoutes);
 app.use('/api', transportRoutes); 
 app.use('/api', goalsRoutes); 
 app.use('/api', tripRoutes);
+app.use('/api', costRoutes); 
 
 
 // Pornire server

@@ -55,6 +55,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { styles } from '../components/styles'; // Stilurile trebuie să fie deja definite
+import axios from 'axios';
+const BASE_URL = 'http://10.0.2.2:5000';  // Adresa corectă a serverului tău
+
+
 
 const SignUp = ({ navigation }) => {
   const [formData, setFormData] = useState({

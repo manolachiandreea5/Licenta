@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, FlatList, Text, TouchableOpacity, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CreateNewTripPopup from '../components/CreateNewTripPopup';
+import AddCostPopup from '../components/AddCostPopup'; // Adăugat noul popup
 import { Container, Title, SearchInput, SectionTitle, AddButton, PopupButton, PopupOption, styles } from '../components/homeStyles';
 import BottomNavMenu from './BottomNavMenu';
 
@@ -9,11 +10,20 @@ const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isOptionPopupVisible, setOptionPopupVisible] = useState(false);
   const [isCreateTripPopupVisible, setCreateTripPopupVisible] = useState(false);
+  const [isAddCostPopupVisible, setAddCostPopupVisible] = useState(false);
 
   const handleOptionSelect = (option) => {
-    if (option === 'Create new trip') {
-      setOptionPopupVisible(false);
-      setCreateTripPopupVisible(true);
+    switch (option) {
+      case 'Create new trip':
+        setOptionPopupVisible(false);
+        setCreateTripPopupVisible(true);
+        break;
+      case 'Add cost':
+        setOptionPopupVisible(false);
+        setAddCostPopupVisible(true); // Activează popup-ul AddCost
+        break;
+      default:
+        break;
     }
   };
 
@@ -121,6 +131,12 @@ const Home = ({ navigation }) => {
         visible={isCreateTripPopupVisible}
         onClose={() => setCreateTripPopupVisible(false)}
       />
+      <AddCostPopup
+        visible={isAddCostPopupVisible}
+        onClose={() => setAddCostPopupVisible(false)}
+        trips={trips.future}
+      />
+
       <BottomNavMenu navigation={navigation} />
     </Container>
   );

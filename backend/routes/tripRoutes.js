@@ -19,11 +19,13 @@ const authenticate = require('../middleware/authMiddleware'); // Importează mid
 // GET all trips
 router.get('/trips', authenticate, async (req, res) => {
     try {
+      console.log("User ID:", req.user.id);
       const trips = await Trip.find({ user: req.user.id })
         .populate('transport')
         .populate('tripGoals')
         .populate('activities')
         .populate('costs');
+      console.log("Trips fetched:", trips);
       res.status(200).json(trips);
     } catch (error) {
       console.error('Error fetching trips:', error); // Log eroarea

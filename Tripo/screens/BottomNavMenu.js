@@ -22,7 +22,7 @@ const BottomNavMenu = ({ navigation }) => {
         <Text style={{ fontSize: 12, marginTop: 4, color: 'black' }}>Calendar</Text>
       </NavItem>
 
-      <NavItem onPress={() => navigation.navigate('Budget')}>
+      <NavItem onPress={() => navigation.navigate('Buget')}>
         <Icon name="cash-outline" size={24} color="black" />
         <Text style={{ fontSize: 12, marginTop: 4, color: 'black' }}>Budget</Text>
       </NavItem>

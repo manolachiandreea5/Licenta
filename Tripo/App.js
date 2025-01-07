@@ -18,6 +18,7 @@ import FirstPage from './screens/FirstPage';
 import Login from './screens/Login';
 import Singup from './screens/Singup';
 import Home from "./screens/Home";
+import Buget from './screens/Buget'; 
 import { AuthProvider } from './context/AuthContext'; // Importă contextul
 
 
@@ -51,6 +52,11 @@ const App = () => {
         <Stack.Screen 
           name="Home" 
           component={Home} 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="Buget" 
+          component={Buget} 
           options={{ headerShown: false }} 
         />
       </Stack.Navigator>
