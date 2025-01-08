@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors'); 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const HOST = '192.168.1.238';
+
 
 const userRoutes = require('./routes/userRoutes');
 const transportRoutes = require('./routes/transportRoutes');
@@ -13,7 +16,9 @@ const authenticate = require('./middleware/authMiddleware');
 const tripRoutes = require('./routes/tripRoutes');
 const costRoutes = require('./routes/costRoutes');
 
-const HOST = '172.20.10.6';
+app.use(cors());
+// Middleware
+app.use(express.json());
 
 // Conexiune la MongoDB
 mongoose
@@ -21,8 +26,7 @@ mongoose
   .then(() => console.log('Database connected successfully'))
   .catch((err) => console.log('Database connection error:', err));
 
-// Middleware
-app.use(express.json());
+
 
 // Rute
 app.use('/api/users', userRoutes);
@@ -32,14 +36,17 @@ app.use('/api', tripRoutes);
 app.use('/api', costRoutes); 
 
 
-// Pornire server
-app.listen(PORT, () => console.log(`Server running on http://127.0.0.1:${PORT}`));
-
 app.get('/api/protected', authenticate, (req, res) => {
   res.json({ message: `Bine ai venit, utilizator ${req.user.email}!` });
 });
 
 
-const cors = require('cors');
-app.use(cors());
 
+//Catch-All for Debugging Non-JSON Errors
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+
+// Pornire server
+app.listen(PORT, () => console.log(`Server running at http://${HOST}:${PORT}`));
