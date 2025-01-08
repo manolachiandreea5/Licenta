@@ -26,5 +26,15 @@ router.post('/add-cost', async (req, res) => {
     }
 });
 
+router.get('/costs', async (req, res) => {
+    console.log('GET /api/costs was hit');
+    try {
+        const costs = await Cost.find();
+        res.json(costs);
+    } catch (error) {
+        res.status(500).send('Error fetching costs');
+    }
+});
+
 module.exports = router;
 

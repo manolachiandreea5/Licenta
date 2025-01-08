@@ -18,6 +18,9 @@ const CreateNewTripPopup = ({ visible, onClose }) => {
   const [selectedTransport, setSelectedTransport] = useState('');
   const [transportOptions, setTransportOptions] = useState([]);
 
+  const [availableGoals, setAvailableGoals] = useState([]);
+
+
   const [selectedGoals, setSelectedGoals] = useState([]);
   const tripGoals = [
     { name: "Food", icon: "fast-food-outline", id: "674ee978a29c0ef21f758374" },
