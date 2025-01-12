@@ -480,6 +480,7 @@ const BudgetPage = () => {
             const response = await fetch('https://v6.exchangerate-api.com/v6/529d5ce80c4dd1db53577bad/latest/RON');
             //const response = await fetch(`https://v6.exchangerate-api.com/v6/529d5ce80c4dd1db53577bad/latest/${newCurrency}`);
             const data = await response.json();
+            //console.log(newCurrency);
 
             if (!data.conversion_rates || !data.conversion_rates[newCurrency]) {
                 throw new Error('Currency data unavailable');
