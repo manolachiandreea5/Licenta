@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet, TouchableWithoutFeedback, Keyboard ,  ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet, TouchableWithoutFeedback, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '../context/AuthContext';
 import config from './../config';
 
-const { width, height } = Dimensions.get('window'); 
+const { width, height } = Dimensions.get('window');
 
 const AddCostPopup = ({ visible, onClose }) => {
     const { token } = useContext(AuthContext);
@@ -94,83 +94,87 @@ const AddCostPopup = ({ visible, onClose }) => {
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true} >
-            <TouchableWithoutFeedback onPress={onClose}>
+            <TouchableWithoutFeedback onPress={() => {
+                      Keyboard.dismiss();
+                      resetForm();
+                      onClose();
+                    }}>
                 <View style={styles.overlay}>
-                <KeyboardAvoidingView
+                    <KeyboardAvoidingView
                         style={styles.keyboardContainer} behavior="height"
                     >
-                        <ScrollView
-                            contentContainerStyle={styles.scrollContent}
-                            keyboardShouldPersistTaps="handled"
-                        >
-                    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-                        <View style={styles.popupContainer}>
-                            <Text style={styles.title}>Add Cost</Text>
 
-                            {/* Select Trip */}
-                            <Text style={styles.label}>Select Trip</Text>
-                            <Picker
-                                selectedValue={selectedTrip}
-                                transparent={true} 
-                                onValueChange={(itemValue) => setSelectedTrip(itemValue)}
-                                style={styles.picker}
-                            >
-                                <Picker.Item label="Select trip" value="" color='black'/>
-                                {trips.map((trip) => (
-                                    <Picker.Item key={trip._id} label={trip.name || 'Unnamed Trip'} value={trip._id} color='black' />
-                                ))}
-                            </Picker>
-
-                            {/* Select Type of Cost */}
-                            <Text style={styles.label}>Type of Cost</Text>
-                            <Picker
-                                selectedValue={costType}
-                                onValueChange={(itemValue) => setCostType(itemValue)}
-                                style={styles.picker}
-                            >
-                                <Picker.Item label="Select type" value="" color='black'/>
-                                {costTypes.map((item, index) => (
-                                    <Picker.Item key={index} label={item.label} value={item.value} color='black' />
-                                ))}
-                            </Picker>
-
-                            {/* Amount */}
-                            <Text style={styles.label}>Amount</Text>
-                            <TextInput
-                                color='black'
-                                style={styles.input}
-                                placeholder="Enter amount"
-                                placeholderTextColor="gray"
-                                keyboardType="numeric"
-                                value={amount}
-                                onChangeText={setAmount}
-                            />
-
-                            {/* Single or Group */}
-                            <Text style={styles.label}>Single/Group</Text>
-                            <View style={styles.toggleContainer}>
-                                <TouchableOpacity
-                                    style={[styles.toggleButton, groupType === 'Single' && styles.activeToggleButton]}
-                                    onPress={() => setGroupType('Single')}
+                        <TouchableWithoutFeedback onPress={() => { }}>
+                            <View style={styles.popupContainer}>
+                                <Text style={styles.title}>Add Cost</Text>
+                                <ScrollView
+                                    contentContainerStyle={styles.scrollContent}
+                                    keyboardShouldPersistTaps="handled"
                                 >
-                                    <Text style={[styles.toggleButtonText, groupType === 'Single' && styles.activeToggleText]}>Single</Text>
-                                </TouchableOpacity>
+                                    {/* Select Trip */}
+                                    <Text style={styles.label}>Select Trip</Text>
+                                    <Picker
+                                        selectedValue={selectedTrip}
+                                        transparent={true}
+                                        onValueChange={(itemValue) => setSelectedTrip(itemValue)}
+                                        style={styles.picker}
+                                    >
+                                        <Picker.Item label="Select trip" value="" color='black' />
+                                        {trips.map((trip) => (
+                                            <Picker.Item key={trip._id} label={trip.name || 'Unnamed Trip'} value={trip._id} color='black' />
+                                        ))}
+                                    </Picker>
 
-                                <TouchableOpacity
-                                    style={[styles.toggleButton, groupType === 'Group' && styles.activeToggleButton]}
-                                    onPress={() => setGroupType('Group')}
-                                >
-                                    <Text style={[styles.toggleButtonText, groupType === 'Group' && styles.activeToggleText]}>Group</Text>
+                                    {/* Select Type of Cost */}
+                                    <Text style={styles.label}>Type of Cost</Text>
+                                    <Picker
+                                        selectedValue={costType}
+                                        onValueChange={(itemValue) => setCostType(itemValue)}
+                                        style={styles.picker}
+                                    >
+                                        <Picker.Item label="Select type" value="" color='black' />
+                                        {costTypes.map((item, index) => (
+                                            <Picker.Item key={index} label={item.label} value={item.value} color='black' />
+                                        ))}
+                                    </Picker>
+
+                                    {/* Amount */}
+                                    <Text style={styles.label}>Amount</Text>
+                                    <TextInput
+                                        color='black'
+                                        style={styles.input}
+                                        placeholder="Enter amount"
+                                        placeholderTextColor="gray"
+                                        keyboardType="numeric"
+                                        value={amount}
+                                        onChangeText={setAmount}
+                                    />
+
+                                    {/* Single or Group */}
+                                    <Text style={styles.label}>Single/Group</Text>
+                                    <View style={styles.toggleContainer}>
+                                        <TouchableOpacity
+                                            style={[styles.toggleButton, groupType === 'Single' && styles.activeToggleButton]}
+                                            onPress={() => setGroupType('Single')}
+                                        >
+                                            <Text style={[styles.toggleButtonText, groupType === 'Single' && styles.activeToggleText]}>Single</Text>
+                                        </TouchableOpacity>
+
+                                        <TouchableOpacity
+                                            style={[styles.toggleButton, groupType === 'Group' && styles.activeToggleButton]}
+                                            onPress={() => setGroupType('Group')}
+                                        >
+                                            <Text style={[styles.toggleButtonText, groupType === 'Group' && styles.activeToggleText]}>Group</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </ScrollView>
+                                {/* Save Button */}
+                                <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                                    <Text style={styles.saveButtonText}>Save</Text>
                                 </TouchableOpacity>
                             </View>
+                        </TouchableWithoutFeedback>
 
-                            {/* Save Button */}
-                            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                                <Text style={styles.saveButtonText}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableWithoutFeedback>
-                    </ScrollView>
                     </KeyboardAvoidingView>
                 </View>
             </TouchableWithoutFeedback>
@@ -230,7 +234,7 @@ const styles = StyleSheet.create({
     },
     popupContainer: {
         width: width * 0.9, // Proporțional cu ecranul
-        //maxHeight: height * 0.9, // Adaptează înălțimea
+        maxHeight: height * 0.9, // Adaptează înălțimea
         backgroundColor: 'white',
         borderRadius: 15,
         paddingVertical: 24,

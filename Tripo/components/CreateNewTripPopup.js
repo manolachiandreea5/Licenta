@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet, TouchableWithoutFeedback, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-modern-datepicker';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '../context/AuthContext';
 import config from './../config';
 
+const { width, height } = Dimensions.get('window');
 
 const CreateNewTripPopup = ({ visible, onClose }) => {
   const { token } = useContext(AuthContext);
@@ -125,135 +126,142 @@ const CreateNewTripPopup = ({ visible, onClose }) => {
         }}
       >
         <View style={styles.overlay}>
-          <TouchableWithoutFeedback onPress={() => { }} >
-            <View style={styles.popupContainer}>
-              <Text style={styles.title}>Create trip</Text>
+          <KeyboardAvoidingView
+            style={styles.keyboardContainer}
+            behavior="padding"
+          >
+            <TouchableWithoutFeedback onPress={() => { }} >
+              <View style={styles.popupContainer}>
+                <Text style={styles.title}>Create trip</Text>
+                <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+                  {/* Trip Name */}
+                  <Text style={styles.label}>Trip name</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Trip name"
+                    placeholderTextColor="gray"
+                    value={tripName}
+                    onChangeText={setTripName}
+                  />
 
-              {/* Trip Name */}
-              <Text style={styles.label}>Trip name</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Trip name"
-                value={tripName}
-                onChangeText={setTripName}
-              />
-
-              {/* Start Date */}
-              <Text style={styles.label}>Start Date</Text>
-              <TouchableOpacity
-                style={styles.dateButton}
-                onPress={() => setStartDatePickerVisible(true)}
-              >
-                <Text style={styles.dateText}>
-                  {startDate && !isNaN(startDate) ? startDate.toDateString() : 'Select Start Date'}
-                </Text>
-              </TouchableOpacity>
-
-              {isStartDatePickerVisible && (
-                <DatePicker
-                  mode="calendar"
-                  onDateChange={(dateString) => {
-                    //console.log('Raw Selected Date:', dateString); // Log-ul valorii brute
-                    const dateParts = dateString.split('/'); // Desparte string-ul după `/`
-                    const validDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); // Creează un obiect Date
-
-                    if (!isNaN(validDate)) {
-                      setStartDate(validDate); // Setează data validă
-                      //console.log('Valid Date Selected:', validDate);
-                    } else {
-                      //console.error('Invalid date selected:', dateString);
-                    }
-                    setStartDatePickerVisible(false);
-                  }}
-                />
-              )}
-
-
-
-
-              {/* End Date */}
-              <Text style={styles.label}>End Date</Text>
-              <TouchableOpacity
-                style={styles.dateButton}
-                onPress={() => setEndDatePickerVisible(true)}
-              >
-                <Text style={styles.dateText}>
-                  {endDate && !isNaN(endDate) ? endDate.toDateString() : 'Select End Date'}
-                </Text>
-              </TouchableOpacity>
-
-              {isEndDatePickerVisible && (
-                <DatePicker
-                  mode="calendar"
-                  onDateChange={(dateString) => {
-                    //console.log('Raw Selected Date:', dateString); // Log-ul valorii brute
-                    const dateParts = dateString.split('/'); // Desparte string-ul după `/`
-                    const validDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); // Creează un obiect Date
-
-                    if (!isNaN(validDate)) {
-                      setEndDate(validDate); // Setează data validă
-                      //console.log('Valid Date Selected:', validDate);
-                    } else {
-                      console.error('Invalid date selected:', dateString);
-                    }
-                    setEndDatePickerVisible(false);
-                  }}
-                />
-              )}
-
-
-              {/* Transport */}
-              <Text style={styles.label}>Transport type</Text>
-              <Picker
-                selectedValue={selectedTransport}
-                onValueChange={(itemValue) => setSelectedTransport(itemValue)}
-                style={styles.picker} // Stil aplicat Picker-ului
-                itemStyle={styles.pickerItem} // Stil pentru fiecare element (doar iOS)
-              >
-                <Picker.Item label="Select transport type" value="" />
-                {transportOptions.map((transport) => (
-                  <Picker.Item key={transport._id} label={transport.name} value={transport._id} />
-                ))}
-              </Picker>
-
-
-
-              {/* Trip Goals */}
-              <Text style={styles.subTitle}>Trip goals</Text>
-              <View style={styles.tripGoalsContainer}>
-                {tripGoals.map((goal, index) => (
+                  {/* Start Date */}
+                  <Text style={styles.label}>Start Date</Text>
                   <TouchableOpacity
-                    key={index}
-                    style={[
-                      styles.goalButton,
-                      selectedGoals.includes(goal.id) && styles.selectedGoalButton,
-                    ]}
-                    onPress={() => toggleGoalSelection(goal.id)}
+                    style={styles.dateButton}
+                    onPress={() => setStartDatePickerVisible(true)}
                   >
-                    <Icon
-                      name={goal.icon}
-                      size={18}
-                      color={selectedGoals.includes(goal.id) ? 'white' : 'black'}
-                      style={styles.goalIcon}
-                    />
-                    <Text
-                      style={[
-                        styles.goalText,
-                        selectedGoals.includes(goal.id) && { color: 'white' },
-                      ]}
-                    >
-                      {goal.name}
+                    <Text style={styles.dateText}>
+                      {startDate && !isNaN(startDate) ? startDate.toDateString() : 'Select Start Date'}
                     </Text>
                   </TouchableOpacity>
-                ))}
-              </View>
 
-              {/* Save Button */}
-              <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                <Text style={styles.saveButtonText}>Save</Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableWithoutFeedback>
+                  {isStartDatePickerVisible && (
+                    <DatePicker
+                      mode="calendar"
+                      onDateChange={(dateString) => {
+                        //console.log('Raw Selected Date:', dateString); // Log-ul valorii brute
+                        const dateParts = dateString.split('/'); // Desparte string-ul după `/`
+                        const validDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); // Creează un obiect Date
+
+                        if (!isNaN(validDate)) {
+                          setStartDate(validDate); // Setează data validă
+                          //console.log('Valid Date Selected:', validDate);
+                        } else {
+                          //console.error('Invalid date selected:', dateString);
+                        }
+                        setStartDatePickerVisible(false);
+                      }}
+                    />
+                  )}
+
+
+
+
+                  {/* End Date */}
+                  <Text style={styles.label}>End Date</Text>
+                  <TouchableOpacity
+                    style={styles.dateButton}
+                    onPress={() => setEndDatePickerVisible(true)}
+                  >
+                    <Text style={styles.dateText}>
+                      {endDate && !isNaN(endDate) ? endDate.toDateString() : 'Select End Date'}
+                    </Text>
+                  </TouchableOpacity>
+
+                  {isEndDatePickerVisible && (
+                    <DatePicker
+                      mode="calendar"
+                      onDateChange={(dateString) => {
+                        //console.log('Raw Selected Date:', dateString); // Log-ul valorii brute
+                        const dateParts = dateString.split('/'); // Desparte string-ul după `/`
+                        const validDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); // Creează un obiect Date
+
+                        if (!isNaN(validDate)) {
+                          setEndDate(validDate); // Setează data validă
+                          //console.log('Valid Date Selected:', validDate);
+                        } else {
+                          console.error('Invalid date selected:', dateString);
+                        }
+                        setEndDatePickerVisible(false);
+                      }}
+                    />
+                  )}
+
+
+                  {/* Transport */}
+                  <Text style={styles.label}>Transport type</Text>
+                  <Picker
+                    selectedValue={selectedTransport}
+                    onValueChange={(itemValue) => setSelectedTransport(itemValue)}
+                    style={styles.picker} // Stil aplicat Picker-ului
+                    itemStyle={styles.pickerItem} // Stil pentru fiecare element (doar iOS)
+                  >
+                    <Picker.Item label="Select transport type" value="" />
+                    {transportOptions.map((transport) => (
+                      <Picker.Item key={transport._id} label={transport.name} value={transport._id} />
+                    ))}
+                  </Picker>
+
+
+
+                  {/* Trip Goals */}
+                  <Text style={styles.subTitle}>Trip goals</Text>
+                  <View style={styles.tripGoalsContainer}>
+                    {tripGoals.map((goal, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        style={[
+                          styles.goalButton,
+                          selectedGoals.includes(goal.id) && styles.selectedGoalButton,
+                        ]}
+                        onPress={() => toggleGoalSelection(goal.id)}
+                      >
+                        <Icon
+                          name={goal.icon}
+                          size={18}
+                          color={selectedGoals.includes(goal.id) ? 'white' : 'black'}
+                          style={styles.goalIcon}
+                        />
+                        <Text
+                          style={[
+                            styles.goalText,
+                            selectedGoals.includes(goal.id) && { color: 'white' },
+                          ]}
+                        >
+                          {goal.name}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </ScrollView>
+
+                {/* Save Button */}
+                <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                  <Text style={styles.saveButtonText}>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
+          </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>
     </Modal>
@@ -261,6 +269,16 @@ const CreateNewTripPopup = ({ visible, onClose }) => {
 };
 
 const styles = StyleSheet.create({
+  keyboardContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -268,7 +286,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   popupContainer: {
-    width: '90%', // Lățime mai mare
+    width: width * 0.9, // Proporțional cu ecranul
+    maxHeight: height * 0.9, // Adaptează înălțimea
     backgroundColor: 'white',
     borderRadius: 15,
     paddingVertical: 24,

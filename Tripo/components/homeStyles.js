@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
-import { StyleSheet } from 'react-native';
+import { StyleSheet  } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Colors
 export const Colors = {
@@ -11,7 +12,13 @@ export const Colors = {
 const { primary, black, white } = Colors;
 
 // Styled-components
-export const Container = styled.View`
+// export const Container = styled.View`
+//   flex: 1;
+//   background-color: ${white};
+//   padding: 16px;
+// `;
+
+export const Container = styled(SafeAreaView)`
   flex: 1;
   background-color: ${white};
   padding: 16px;
@@ -145,17 +152,33 @@ export const BottomNavContainer = styled.View`
   bottom: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 70px;
   background-color: white;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
   border-top-width: 1px;
   border-top-color: #ddd;
+  adding-horizontal: 16px;
   z-index: 10;
 `;
-
+export const BottomNavContainer22 = styled(SafeAreaView)`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 75px;
+  background-color: white;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-top-width: 1px;
+  border-top-color: #ddd;
+  padding-horizontal: 16px;
+  z-index: 10;
+`;
 export const NavItem = styled.TouchableOpacity`
+  flex: 1;
   align-items: center;
   justify-content: center;
 `;
