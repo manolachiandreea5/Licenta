@@ -419,9 +419,7 @@
 //ultima varianta buna!!!!!1
 
 
-
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Modal, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
 import { useNavigation } from '@react-navigation/native';
@@ -431,7 +429,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import AddCostPopup from '../components/AddCostPopup';
 import ChangeCurrencyPopup from '../components/ChangeCurrencyPopup';
 import config from './../config';
-
+import { AuthContext } from '../context/AuthContext';  // Import context autentificare
 
 const colors = ['#FF6961', '#77DD77', '#AEC6CF', '#FFD700', '#FFB347', '#B19CD9'];
 
@@ -442,6 +440,7 @@ const assignColors = (data) => {
         color: availableColors.length ? availableColors.pop() : '#CCCCCC'
     }));
 };
+
 const groupCostsByType = (costs) => {
     const grouped = {};
     costs.forEach(cost => {
@@ -462,31 +461,39 @@ const BudgetPage = () => {
     const [currency, setCurrency] = useState('RON');
     const [exchangeRates, setExchangeRates] = useState({});
     const navigation = useNavigation();
+    const { token } = useContext(AuthContext);  // Obținerea token-ului din context
 
+    const fetchCosts = async () => {
+        try {
+            const response = await fetch(`${config.BASE_URL}/api/costs`, {
+                headers: {
+                    'Authorization': `Bearer ${token}` // Filtrare pe baza utilizatorului
+                }
+            });
+            if (!response.ok) throw new Error('Failed to fetch costs');
+            
+            const data = await response.json();
+            const groupedCosts = groupCostsByType(data);
+            const costsWithColor = assignColors(groupedCosts);
+            setCosts(costsWithColor);
+        } catch (error) {
+            console.error('Error fetching costs:', error);
+            Alert.alert('Error', 'Failed to fetch costs.');
+        }
+    };
+    
     useEffect(() => {
-        fetch(`${config.BASE_URL}/api/costs`)
-            .then(response => response.json())
-            .then(data => {
-                const groupedCosts = groupCostsByType(data);
-                const costsWithColor = assignColors(groupedCosts);
-                setCosts(costsWithColor);
-            })
-            .catch(error => console.error('Error fetching costs:', error));
-    }, []);
-
+        fetchCosts();  // ✅ Apelarea funcției în useEffect
+    }, [token]);
 
     const handleCurrencyChange = async (newCurrency) => {
         setCurrency(newCurrency);
         try {
-            const response = await fetch('https://v6.exchangerate-api.com/v6/529d5ce80c4dd1db53577bad/latest/RON');
-            //const response = await fetch(`https://v6.exchangerate-api.com/v6/529d5ce80c4dd1db53577bad/latest/${newCurrency}`);
+            const response = await fetch(`https://v6.exchangerate-api.com/v6/529d5ce80c4dd1db53577bad/latest/RON`);
             const data = await response.json();
-            //console.log(newCurrency);
-
             if (!data.conversion_rates || !data.conversion_rates[newCurrency]) {
                 throw new Error('Currency data unavailable');
             }
-
             setExchangeRates(data.conversion_rates);
         } catch (error) {
             console.error('Error fetching exchange rates:', error);
@@ -494,6 +501,7 @@ const BudgetPage = () => {
             setCurrency('RON');
         }
     };
+
     const handleOptionSelect = (option) => {
         switch (option) {
             case 'Add Cost':
@@ -509,31 +517,17 @@ const BudgetPage = () => {
         }
     };
 
-
     const convertAmount = (amount, currency, exchangeRates) => {
-        // Verificare dacă suma este validă
         if (typeof amount !== 'number' || isNaN(amount)) {
-            console.warn('Invalid amount provided:', amount);
             return "Invalid Amount";
         }
-
-        // Verificare dacă exchangeRates și valuta sunt valide
-        if (!exchangeRates || typeof exchangeRates !== 'object' || !exchangeRates[currency]) {
-            //console.warn('Exchange rate not available for selected currency.');
+        if (!exchangeRates || !exchangeRates[currency]) {
             return `${amount.toFixed(2)} RON`;
         }
-
         const rate = exchangeRates[currency];
-        if (typeof rate !== 'number' || isNaN(rate) || rate <= 0) {
-            console.warn('Invalid exchange rate data:', rate);
-            return `${amount.toFixed(2)} RON`;
-        }
-
-        // Calculul conversiei corecte
         const convertedAmount = amount * rate;
         return `${convertedAmount.toFixed(2)} ${currency}`;
     };
-
 
     const chartData = costs.map(cost => ({
         name: cost.type,
@@ -543,10 +537,9 @@ const BudgetPage = () => {
         legendFontSize: 15
     }));
 
-
     return (
         <Container>
-            {/* Header Section with Back Arrow and Centered Title */}
+            {/* Header Section */}
             <View style={[localStyles.header, { backgroundColor: '#E6E6FA', padding: 16, borderRadius: 16 }]}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Icon name="arrow-back" size={24} color="black" />
@@ -555,7 +548,7 @@ const BudgetPage = () => {
                 <View style={{ width: 24 }} />
             </View>
 
-            {/* Pie Chart Section with Random Colors */}
+            {/* Pie Chart Section */}
             <View style={localStyles.chartCard}>
                 <PieChart
                     data={chartData}
@@ -573,7 +566,7 @@ const BudgetPage = () => {
                 />
             </View>
 
-            {/* List of Costs */}
+            {/* Cost List */}
             <FlatList
                 data={costs}
                 keyExtractor={(item) => item.type}
@@ -604,26 +597,25 @@ const BudgetPage = () => {
                     onPress={() => setModalVisible(false)}
                 >
                     <View style={homeStyles.modalContainer}>
-                        {[
-                            { icon: 'cash-outline', label: 'Add Cost' },
-                            { icon: 'swap-horizontal-outline', label: 'Change Currency' }
-                        ].map((option, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                style={homeStyles.popupButton}
-                                onPress={() => handleOptionSelect(option.label)}
-                            >
-                                <View style={homeStyles.circle}>
-                                    <Icon name={option.icon} size={20} color="#fff" />
-                                </View>
-                                <Text style={homeStyles.popupText}>{option.label}</Text>
-                            </TouchableOpacity>
-                        ))}
+                        {[{ icon: 'cash-outline', label: 'Add Cost' },
+                        { icon: 'swap-horizontal-outline', label: 'Change Currency' }]
+                            .map((option, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={homeStyles.popupButton}
+                                    onPress={() => handleOptionSelect(option.label)}
+                                >
+                                    <View style={homeStyles.circle}>
+                                        <Icon name={option.icon} size={20} color="#fff" />
+                                    </View>
+                                    <Text style={homeStyles.popupText}>{option.label}</Text>
+                                </TouchableOpacity>
+                            ))}
                     </View>
                 </TouchableOpacity>
             </Modal>
 
-            {/* Modals */}
+            {/* Modals for Popups */}
             <ChangeCurrencyPopup
                 visible={isChangeCurrencyPopupVisible}
                 onClose={() => setChangeCurrencyPopupVisible(false)}
@@ -632,6 +624,7 @@ const BudgetPage = () => {
             <AddCostPopup
                 visible={isAddCostPopupVisible}
                 onClose={() => setAddCostPopupVisible(false)}
+                onCostAdded={() => fetchCosts()}
             />
 
             <BottomNavMenu navigation={navigation} />
@@ -650,14 +643,3 @@ const localStyles = {
 };
 
 export default BudgetPage;
-
-
-
-
-
-
-
-
-
-
-
