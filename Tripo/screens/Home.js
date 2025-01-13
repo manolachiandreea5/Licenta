@@ -1,16 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, FlatList, Text, TouchableOpacity, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CreateNewTripPopup from '../components/CreateNewTripPopup';
 import AddCostPopup from '../components/AddCostPopup'; // Adăugat noul popup
 import { Container, Title, SearchInput, SectionTitle, AddButton, PopupButton, PopupOption, styles } from '../components/homeStyles';
 import BottomNavMenu from './BottomNavMenu';
+import config from './../config'; 
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isOptionPopupVisible, setOptionPopupVisible] = useState(false);
   const [isCreateTripPopupVisible, setCreateTripPopupVisible] = useState(false);
   const [isAddCostPopupVisible, setAddCostPopupVisible] = useState(false);
+      const [costs, setCosts] = useState([]);
+  const { token } = useContext(AuthContext); 
+
+  const fetchCosts = async () => {
+    try {
+        const response = await fetch(`${config.BASE_URL}/api/costs`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) throw new Error('Failed to fetch costs');
+        const data = await response.json();
+        setCosts(data);
+    } catch (error) {
+        console.error('Error fetching costs:', error);
+        Alert.alert('Error', 'Failed to fetch costs.');
+    }
+};
 
   const handleOptionSelect = (option) => {
     //setModalVisible(false); // Închide modalul principal
@@ -132,10 +153,11 @@ const Home = ({ navigation }) => {
         visible={isCreateTripPopupVisible}
         onClose={() => setCreateTripPopupVisible(false)}
       />
-      <AddCostPopup
-        visible={isAddCostPopupVisible}
-        onClose={() => setAddCostPopupVisible(false)}
-      />
+       <AddCostPopup
+                visible={isAddCostPopupVisible}
+                onClose={() => setAddCostPopupVisible(false)}
+                onCostAdded={() => fetchCosts()}
+            />
 
 
       <BottomNavMenu navigation={navigation} />

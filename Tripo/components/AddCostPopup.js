@@ -6,7 +6,7 @@ import config from './../config';
 
 const { width, height } = Dimensions.get('window');
 
-const AddCostPopup = ({ visible, onClose }) => {
+const AddCostPopup = ({ visible, onClose, onCostAdded  }) => {
     const { token } = useContext(AuthContext);
 
     const [trips, setTrips] = useState([]);
@@ -71,7 +71,7 @@ const AddCostPopup = ({ visible, onClose }) => {
         };
 
         try {
-            const res = await fetch(`${config.BASE_URL}/api/add-cost`, {
+            const res = await fetch(`${config.BASE_URL}/api/costs`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -86,6 +86,7 @@ const AddCostPopup = ({ visible, onClose }) => {
             if (res.ok) {
                 resetForm();
                 onClose();
+                onCostAdded();
             }
         } catch (error) {
             console.error('Error saving cost:', error);
