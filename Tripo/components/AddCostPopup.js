@@ -1,8 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet, TouchableWithoutFeedback, Keyboard ,  ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '../context/AuthContext';
 import config from './../config';
+
+const { width, height } = Dimensions.get('window'); 
 
 const AddCostPopup = ({ visible, onClose }) => {
     const { token } = useContext(AuthContext);
@@ -94,6 +96,13 @@ const AddCostPopup = ({ visible, onClose }) => {
         <Modal visible={visible} animationType="slide" transparent={true} >
             <TouchableWithoutFeedback onPress={onClose}>
                 <View style={styles.overlay}>
+                <KeyboardAvoidingView
+                        style={styles.keyboardContainer} behavior="height"
+                    >
+                        <ScrollView
+                            contentContainerStyle={styles.scrollContent}
+                            keyboardShouldPersistTaps="handled"
+                        >
                     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                         <View style={styles.popupContainer}>
                             <Text style={styles.title}>Add Cost</Text>
@@ -106,9 +115,9 @@ const AddCostPopup = ({ visible, onClose }) => {
                                 onValueChange={(itemValue) => setSelectedTrip(itemValue)}
                                 style={styles.picker}
                             >
-                                <Picker.Item label="Select trip" value="" />
+                                <Picker.Item label="Select trip" value="" color='black'/>
                                 {trips.map((trip) => (
-                                    <Picker.Item key={trip._id} label={trip.name || 'Unnamed Trip'} value={trip._id} />
+                                    <Picker.Item key={trip._id} label={trip.name || 'Unnamed Trip'} value={trip._id} color='black' />
                                 ))}
                             </Picker>
 
@@ -119,17 +128,19 @@ const AddCostPopup = ({ visible, onClose }) => {
                                 onValueChange={(itemValue) => setCostType(itemValue)}
                                 style={styles.picker}
                             >
-                                <Picker.Item label="Select type" value="" />
+                                <Picker.Item label="Select type" value="" color='black'/>
                                 {costTypes.map((item, index) => (
-                                    <Picker.Item key={index} label={item.label} value={item.value} />
+                                    <Picker.Item key={index} label={item.label} value={item.value} color='black' />
                                 ))}
                             </Picker>
 
                             {/* Amount */}
                             <Text style={styles.label}>Amount</Text>
                             <TextInput
+                                color='black'
                                 style={styles.input}
                                 placeholder="Enter amount"
+                                placeholderTextColor="gray"
                                 keyboardType="numeric"
                                 value={amount}
                                 onChangeText={setAmount}
@@ -159,6 +170,8 @@ const AddCostPopup = ({ visible, onClose }) => {
                             </TouchableOpacity>
                         </View>
                     </TouchableWithoutFeedback>
+                    </ScrollView>
+                    </KeyboardAvoidingView>
                 </View>
             </TouchableWithoutFeedback>
         </Modal>
@@ -166,6 +179,17 @@ const AddCostPopup = ({ visible, onClose }) => {
 };
 
 const styles = StyleSheet.create({
+    keyboardContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    scrollContent: {
+        flexGrow: 1,
+        justifyContent: 'center',
+    },
+
     toggleContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -205,7 +229,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     popupContainer: {
-        width: '90%',
+        width: width * 0.9, // Proporțional cu ecranul
+        //maxHeight: height * 0.9, // Adaptează înălțimea
         backgroundColor: 'white',
         borderRadius: 15,
         paddingVertical: 24,
