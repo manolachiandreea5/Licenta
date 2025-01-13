@@ -13,14 +13,15 @@ const Home = ({ navigation }) => {
   const [isAddCostPopupVisible, setAddCostPopupVisible] = useState(false);
 
   const handleOptionSelect = (option) => {
+    //setModalVisible(false); // Închide modalul principal
     switch (option) {
       case 'Create new trip':
-        setOptionPopupVisible(false);
+        setModalVisible(false);
         setCreateTripPopupVisible(true);
         break;
       case 'Add cost':
-        setOptionPopupVisible(false);
-        setAddCostPopupVisible(true); // Activează popup-ul AddCost
+        setModalVisible(false);
+        setAddCostPopupVisible(true); // Activează corect popup-ul AddCost
         break;
       default:
         break;
@@ -96,37 +97,37 @@ const Home = ({ navigation }) => {
         <Icon name="add" size={25} color="black" />
       </AddButton>
       <Modal
-  visible={modalVisible}
-  transparent={true}
-  animationType="fade"
-  onRequestClose={() => setModalVisible(false)}
->
-  <TouchableOpacity
-    style={styles.modalOverlay}
-    activeOpacity={1}
-    onPress={() => setModalVisible(false)}
-  >
-    <View style={styles.modalContainer}>
-      {[
-        { icon: 'school-outline', label: 'Add activity' },
-        { icon: 'calendar-outline', label: 'Quick plan' },
-        { icon: 'cash-outline', label: 'Add cost' },
-        { icon: 'briefcase-outline', label: 'Create new trip' },
-      ].map((option, index) => (
+        visible={modalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
         <TouchableOpacity
-          key={index}
-          style={styles.popupButton}
-          onPress={() => handleOptionSelect(option.label)}
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setModalVisible(false)}
         >
-          <View style={styles.circle}>
-            <Icon name={option.icon} size={20} color="#fff" />
+          <View style={styles.modalContainer}>
+            {[
+              { icon: 'school-outline', label: 'Add activity' },
+              { icon: 'calendar-outline', label: 'Quick plan' },
+              { icon: 'cash-outline', label: 'Add cost' },
+              { icon: 'briefcase-outline', label: 'Create new trip' },
+            ].map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.popupButton}
+                onPress={() => handleOptionSelect(option.label)}
+              >
+                <View style={styles.circle}>
+                  <Icon name={option.icon} size={20} color="#fff" />
+                </View>
+                <Text style={styles.popupText}>{option.label}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
-          <Text style={styles.popupText}>{option.label}</Text>
         </TouchableOpacity>
-      ))}
-    </View>
-  </TouchableOpacity>
-</Modal>
+      </Modal>
       <CreateNewTripPopup
         visible={isCreateTripPopupVisible}
         onClose={() => setCreateTripPopupVisible(false)}
@@ -134,8 +135,8 @@ const Home = ({ navigation }) => {
       <AddCostPopup
         visible={isAddCostPopupVisible}
         onClose={() => setAddCostPopupVisible(false)}
-        trips={trips.future}
       />
+
 
       <BottomNavMenu navigation={navigation} />
     </Container>

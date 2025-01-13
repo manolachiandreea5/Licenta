@@ -13,6 +13,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context'; 
 import Startapp from './screens/Startapp';
 import FirstPage from './screens/FirstPage';
 import Login from './screens/Login';
@@ -26,6 +27,7 @@ const Stack = createStackNavigator();
 
 const App = () => {
   return (
+    <SafeAreaProvider> 
     <AuthProvider>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Startapp">
@@ -62,6 +64,7 @@ const App = () => {
       </Stack.Navigator>
     </NavigationContainer>
     </AuthProvider>
+    </SafeAreaProvider>
   );
 };
 

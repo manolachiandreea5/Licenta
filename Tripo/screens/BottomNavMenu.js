@@ -1,12 +1,14 @@
 import React from 'react';
 import { Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { BottomNavContainer, NavItem } from '../components/homeStyles'; // Importă componentele stilizate
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BottomNavContainer22, NavItem, BottomNavContainer } from '../components/homeStyles'; // Importă componentele stilizate
 
 const BottomNavMenu = ({ navigation }) => {
+    const insets = useSafeAreaInsets();
     const routeName = navigation.getState().routes[navigation.getState().index].name;
   return (
-    <BottomNavContainer>
+    <BottomNavContainer edges={['bottom']} >
       <NavItem onPress={() => navigation.navigate('Home')}>
         <Icon name={routeName === 'Home' ? 'map' : 'map-outline'} size={24} color="black" />
         <Text style={{ fontSize: 12, marginTop: 4, color: 'black' }}>Home</Text>
@@ -34,5 +36,6 @@ const BottomNavMenu = ({ navigation }) => {
     </BottomNavContainer>
   );
 };
+
 
 export default BottomNavMenu;
