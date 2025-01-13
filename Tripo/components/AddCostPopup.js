@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '../context/AuthContext';
-import { CheckBox } from 'react-native';
+import config from './../config';
 
 const AddCostPopup = ({ visible, onClose }) => {
     const { token } = useContext(AuthContext);
@@ -30,7 +30,7 @@ const AddCostPopup = ({ visible, onClose }) => {
     useEffect(() => {
         const fetchTrips = async () => {
             try {
-                const response = await fetch('http://10.0.2.2:5000/api/trips', {
+                const response = await fetch(`${config.BASE_URL}/api/trips`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const data = await response.json();
@@ -69,7 +69,7 @@ const AddCostPopup = ({ visible, onClose }) => {
         };
 
         try {
-            const res = await fetch('http://10.0.2.2:5000/api/add-cost', {
+            const res = await fetch(`${config.BASE_URL}/api/add-cost`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const AddCostPopup = ({ visible, onClose }) => {
     };
 
     return (
-        <Modal visible={visible} animationType="slide" transparent>
+        <Modal visible={visible} animationType="slide" transparent={true} >
             <TouchableWithoutFeedback onPress={onClose}>
                 <View style={styles.overlay}>
                     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -102,6 +102,7 @@ const AddCostPopup = ({ visible, onClose }) => {
                             <Text style={styles.label}>Select Trip</Text>
                             <Picker
                                 selectedValue={selectedTrip}
+                                transparent={true} 
                                 onValueChange={(itemValue) => setSelectedTrip(itemValue)}
                                 style={styles.picker}
                             >

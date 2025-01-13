@@ -89,6 +89,7 @@ import React, { useState, useContext } from 'react'; // Adaugă useContext
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { styles } from '../components/styles';
 import { AuthContext } from '../context/AuthContext'; // Importă AuthContext
+import config from './../config';
 
 const LogIn = ({ navigation }) => {
   const { setToken } = useContext(AuthContext); // Accesează setToken din context
@@ -103,7 +104,7 @@ const LogIn = ({ navigation }) => {
     }
   
     try {
-      const response = await fetch('http://10.0.2.2:5000/api/users/login', {
+      const response = await fetch(`${config.BASE_URL}/api/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

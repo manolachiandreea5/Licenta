@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-modern-datepicker';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '../context/AuthContext';
+import config from './../config';
 
 
 const CreateNewTripPopup = ({ visible, onClose }) => {
@@ -49,14 +50,14 @@ const CreateNewTripPopup = ({ visible, onClose }) => {
 
   // Fetch transport options from backend
   useEffect(() => {
-    fetch('http://10.0.2.2:5000/api/transports', {
+    fetch(`${config.BASE_URL}/api/transports`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
       .then((data) => setTransportOptions(data))
       .catch((err) => console.error(err));
 
-    fetch('http://10.0.2.2:5000/api/trip-goals', {
+    fetch(`${config.BASE_URL}/api/goals`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -90,7 +91,7 @@ const CreateNewTripPopup = ({ visible, onClose }) => {
     console.log('Obiect trimis la server:', newTrip);
 
     try {
-      const res = await fetch('http://10.0.2.2:5000/api/trips', {
+      const res = await fetch(`${config.BASE_URL}/api/trips`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

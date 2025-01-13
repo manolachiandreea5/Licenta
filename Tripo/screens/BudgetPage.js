@@ -430,6 +430,7 @@ import BottomNavMenu from './BottomNavMenu';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AddCostPopup from '../components/AddCostPopup';
 import ChangeCurrencyPopup from '../components/ChangeCurrencyPopup';
+import config from './../config';
 
 
 const colors = ['#FF6961', '#77DD77', '#AEC6CF', '#FFD700', '#FFB347', '#B19CD9'];
@@ -463,7 +464,7 @@ const BudgetPage = () => {
     const navigation = useNavigation();
 
     useEffect(() => {
-        fetch('http://192.168.1.238:5000/api/costs')
+        fetch(`${config.BASE_URL}/api/costs`)
             .then(response => response.json())
             .then(data => {
                 const groupedCosts = groupCostsByType(data);
